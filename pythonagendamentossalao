@@ -1,0 +1,122 @@
+import requests
+from tkinter import *
+from tkinter import IntVar
+#Bibliotecas importadas
+
+janelaprimaria = Tk()
+janelaprimaria.title('-Espaço Salão da Beleza-')
+
+largura_janela = 320
+altura_janela = 150
+janelaprimaria.geometry(f'{largura_janela}x{altura_janela}')
+janelaprimaria.resizable(False, False)
+#Organização da janela primária
+
+def orcamentos():
+    print("Orçamentos")
+    janela_orcamentos = Toplevel(janelaprimaria)
+    janela_orcamentos.title("Orçamentos")
+    janela_orcamentos.geometry("250x300")
+    janela_orcamentos.resizable(False, False)
+    Label(janela_orcamentos,
+          text = "--Serviços--").pack()
+    #Organização da janela de orçamentos
+
+    corte_var = IntVar()
+    Checkbutton(janela_orcamentos, text="Corte Feminino R$35", variable=corte_var).pack()
+    selagem_var = IntVar()
+    Checkbutton(janela_orcamentos, text="Selagem R$100", variable=selagem_var).pack()
+    tinta_var = IntVar()
+    Checkbutton(janela_orcamentos, text="Aplicação de tinta R$40", variable=tinta_var).pack()
+    hidratacao_var = IntVar()
+    Checkbutton(janela_orcamentos, text="Hidratação R$40", variable=hidratacao_var).pack()
+    escova_var = IntVar()
+    Checkbutton(janela_orcamentos, text="Escova R$15", variable=escova_var).pack()
+    #Checkbuttons e variáveis deles
+
+    valor_total = Label (janela_orcamentos, text="Valor total: R$0")
+    valor_total.pack()
+
+    total = 0
+    
+    def calcular_total():
+        nonlocal total
+        total = 0
+        if corte_var.get():
+            total += 35
+        if selagem_var.get():
+            total += 100
+        if tinta_var.get():
+            total += 40
+        if hidratacao_var.get():
+            total += 40
+        if escova_var.get():
+            total += 15
+        valor_total.config(text="Valor total: R${:.2f}".format(total))
+
+    calcular_button = Button(janela_orcamentos, text="Calcular total", command=calcular_total)
+    calcular_button.pack()
+    #Função calcular total
+
+def agendamentos():
+    print("Agendamentos")
+    janela_agendamentos = Toplevel(janelaprimaria)
+    janela_agendamentos.title("Agendamentos")
+    janela_agendamentos.geometry("350x370")
+    janela_agendamentos.resizable(False, False)
+    Label(janela_agendamentos,
+          text = "--Marque seu horário--").pack()
+    #Organização da janela de agendamentos
+
+    nome_label = Label(janela_agendamentos, text="Nome:")
+    nome_label.pack()
+    nome_entry = Entry(janela_agendamentos)
+    nome_entry.pack()
+
+    telefone_label = Label(janela_agendamentos, text="Telefone:")
+    telefone_label.pack()
+    telefone_entry = Entry(janela_agendamentos)
+    telefone_entry.pack()
+
+    horario_label = Label(janela_agendamentos, text="Horário:")
+    horario_label.pack()
+    horario_entry = Entry(janela_agendamentos)
+    horario_entry.pack()
+
+    dia_label = Label(janela_agendamentos, text="Dia:")
+    dia_label.pack()
+    dia_entry = Entry(janela_agendamentos)
+    dia_entry.pack()
+
+    resultado_label = Label(janela_agendamentos, text="", fg="green")
+    resultado_label.pack()
+    #Criação das labels e os campos de entrada para o usuário
+
+    def salvar_agendamentos():
+        nome = nome_entry.get()
+        telefone = telefone_entry.get()
+        horario = horario_entry.get()
+        dia = dia_entry.get()
+        #Função para pegar os dados fornecidos pelo usuário
+
+        resultado_label.config(text="Sua solicitação foi feita, entraremos em contato \nem breve para confirmar o agendamento, obrigado!")
+        #Mensagem que aparece na tela quando o usuário salva o agendamento
+
+        print("Nome:", nome)
+        print("Telefone:", telefone)
+        print("Horário:", horario)
+        print("Dia da semana:", dia)
+
+        botao_salvar = Button(janela_agendamentos, text="Salvar e enviar", command = salvar_agendamentos)
+        botao_salvar.pack()
+    botao_salvar = Button(janela_agendamentos, text="Salvar e enviar", command=salvar_agendamentos)
+    botao_salvar.pack()
+    #Configuração do botão salvar agendamento após o usuário preencher todas as informações
+
+botao_orcamentos = Button(janelaprimaria, text='Orçamentos', command=orcamentos)
+botao_orcamentos.pack()
+botao_agendamentos = Button(janelaprimaria, text='Agendamentos', command=agendamentos)
+botao_agendamentos.pack()
+#Configuração dos botões da janela primária
+
+janelaprimaria.mainloop()
