@@ -1,0 +1,111 @@
+import pandas as pd
+
+# Estudo mais aprofundado com código complexo referente a dados. Puxei os dados de uma planilha e brinquei 
+#com as informações gerando gráficos e sugerindo resultados
+
+# Carregando o arquivo CSV
+file_path = 'D:\\Arquivos Salvos\\Usuario\\Desktop\\Estudo de programação do Laion\\Curso IA\\census.csv'
+data = pd.read_csv('D:\\Arquivos Salvos\\Usuario\\Desktop\\Estudo de programação do Laion\\Curso IA\\census.csv')
+
+# Função para identificar outliers em uma coluna
+def identify_outliers(column):
+    q1 = data[column].quantile(0.25)
+    q3 = data[column].quantile(0.75)
+    iqr = q3 - q1
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+
+    outliers = data[(data[column] < lower_bound) | (data[column] > upper_bound)]
+    return outliers
+# Identificar outliers em cada coluna numérica
+outliers_by_column = {}
+for column in data.select_dtypes(include=['int64', 'float64']).columns:
+    outliers_by_column[column] = identify_outliers(column)
+# Exibir resultados de outliers
+for column, outliers in outliers_by_column.items():
+    print(f"\nOutliers na coluna '{column}':")
+    print(outliers)
+
+# Verificando se há dados faltantes
+missing_data = data.isnull().sum()
+# Imprimindo o resultado
+print('Dados faltantes por coluna')
+print(missing_data)
+
+# Verificando se há dados faltantes como um todo no Dataframe
+total_missing = missing_data.sum()
+if total_missing == 0:
+    print("\nNão há dados faltantes no Dataframe")
+else:
+    print(f"\nHá um total de {total_missing} dados faltantes no Dataframe.")
+
+# Exibindo as primeiras linhas do DataFrame para garantir que os dados foram carregados corretamente
+print("Primeiras linhas do DataFrame:")
+print(data.head())
+
+# Obtendo estatísticas básicas para colunas numéricas
+print("\nEstatísticas básicas para colunas numéricas:")
+print(data.describe())
+
+# Obtendo informações sobre o DataFrame, incluindo tipos de dados e valores ausentes
+print("\nInformações do DataFrame:")
+print(data.info())
+
+# Calcula a contagem de valores únicos para a coluna 'income' com espaço em branco removido
+income_counts = data['income'].str.strip().value_counts()
+print(income_counts)
+
+# Calcula a média da idade
+print(f"Média de idade: {data['age'].mean()} anos")
+
+# Calcula a porcentagem de pessoas com renda maior que 50k
+percentage_greater_than_50k = (income_counts['>50K'] /len(data)) * 100
+print(f"Porcentagem de pessoas com renda >50k: {percentage_greater_than_50k:.2f}%")
+
+# Calculando a contagem de homens e mulheres
+gender_counts = data['sex'].value_counts()
+# Calculando a porcentagem de homens e mulheres
+gender_percentage = (gender_counts / len(data)) * 100
+# Exibindo os resultados
+print("Contagem de gênero:")
+print(gender_counts)
+print("\nPorcentagem de gênero")
+print(gender_percentage)
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Carregando o arquivo CSV
+file_path = 'D:\\Arquivos Salvos\\Usuario\\Desktop\\Estudo de programação do Laion\\Curso IA\\census.csv'
+data = pd.read_csv(file_path)
+
+# Adicionando espaços entre os nomes das colunas
+data.columns = [col.strip() for col in data.columns]
+
+# 1. Gráfico de Dispersão (Scatter Plot): Idade x Horas de trabalho por semana
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=data, x='age', y='hour-per-week', alpha=0.5)
+plt.title('Relação entre Idade e Horas de trabalho por semana')
+plt.xlabel('Idade')
+plt.ylabel('Horas de trabalho por semana')
+plt.show()
+
+# 2. Gráfico de Barras (Bar Plot): Número de anos de educação x Ganho de capital
+plt.figure(figsize=(10, 6))
+sns.barplot(data=data, x='education-num', y='capital-gain')
+plt.title('Relação entre Número de anos de educação e Ganho de capital')
+plt.xlabel('Número de anos de educação')
+plt.ylabel('Ganho de capital')
+plt.show()
+
+# 3. Mapa de Calor de Correlação: Ganho de capital x Perda de capital
+# Selecionando apenas as colunas numéricas para o mapa de calor
+numeric_columns = data.select_dtypes(include=['int64', 'float64']).columns
+correlation_matrix = data[numeric_columns].corr()
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Mapa de Calor de Correlação entre Variáveis Numéricas')
+plt.show()
+
